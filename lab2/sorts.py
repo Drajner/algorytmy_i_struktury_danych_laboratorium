@@ -1,4 +1,3 @@
-
 def bubble_sort(list):
     is_not_finished = True
     while(is_not_finished):
@@ -16,6 +15,7 @@ def selection_sort(list):
     while i < (len(list)-1):
         j = i+1
         min_el = list[i]
+        min_j = i
         while j < (len(list)):
             if(min_el>list[j]): 
                 min_el = list[j]
@@ -57,6 +57,38 @@ def merge_sort(list):
     return sorted_list
 
 
+def partition(list, i, j):
+    first_pointer = i+1
+    second_pointer = j
+    pivot = list[i]
+    while first_pointer-1 != second_pointer:
+        if list[first_pointer] >= pivot:
+            while not list[second_pointer] < pivot:
+                if second_pointer == first_pointer:
+                    second_pointer -= 1
+                    list[second_pointer], list[i] = list[i], list[second_pointer]
+                    return second_pointer
+                second_pointer -= 1
+            list[second_pointer], list[first_pointer] = list[first_pointer], list[second_pointer]
+            second_pointer -=1
+        first_pointer += 1
+    list[second_pointer], list[i] = list[i], list[second_pointer]
+    return second_pointer
+
+
+def quick_sort(list, i=0, j=None):
+    if j is None:
+        j = len(list)-1
+    if i < j:
+        q = partition(list, i, j)
+        quick_sort(list, i, q-1)
+        quick_sort(list, q+1, j)
+    return list
+
 ass = [5,7,3,9,2]
-print(selection_sort(ass))
-print(merge_sort(ass))
+mmmmm = [6,8,9,1,3,5,6,3,2,1,7,10]
+print(quick_sort(mmmmm))
+print(quick_sort(ass))
+# print(selection_sort(ass))
+# print(merge_sort(ass))
+# print(quick_sort([7,1,7]))
