@@ -40,9 +40,10 @@ def get_times(iter_times=1):
 
 
 def plot_data(x_axis, y_axis, x_label="", y_label=""):
-    pyplot.plot(x_axis, y_axis)
+    pyplot.plot(x_axis, y_axis, 'bo--', linewidth=2, markersize=12)
     pyplot.ylabel(y_label)
     pyplot.xlabel(x_label)
+    pyplot.xticks(x_axis)
 
 
 if __name__ == "__main__":
@@ -50,9 +51,10 @@ if __name__ == "__main__":
     results = get_times(iter_times)
     for name in results:
         y_axis = results[name]
-        x_axis = [i*1000 for i in range(1, 11)]   
+        x_axis = [i*1000 for i in range(1, 11)]
         x_label = "Liczba sortowanych słów"
         y_label = "Czas [s] posortowania n razy za pomocą " + name.lower() + " sort" + f" [n={iter_times}]"
         plot_data(x_axis, y_axis, x_label, y_label)
+        pyplot.legend([name + " sort"])
         pyplot.savefig(name + ".png")
         pyplot.clf()
