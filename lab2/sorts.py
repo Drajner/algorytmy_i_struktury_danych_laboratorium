@@ -85,10 +85,3 @@ def quick_sort(list, i=0, j=None):
         quick_sort(list, q+1, j)
     return list
 
-ass = [5,7,3,9,2]
-mmmmm = [6,8,9,1,3,5,6,3,2,1,7,10]
-print(quick_sort(mmmmm))
-print(quick_sort(ass))
-# print(selection_sort(ass))
-# print(merge_sort(ass))
-# print(quick_sort([7,1,7]))
