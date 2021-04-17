@@ -27,13 +27,13 @@ def get_times():
     results = {'Bubble': [], 'Selection': [], 'Merge': [], 'Quick': []}
     while(tests_not_finished):
         table_of_words = get_table_of_words(num_of_words)
-        results['Bubble'].append(timeit.timeit('sorts.bubble_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=1))
+        results['Bubble'].append(timeit.timeit('sorts.bubble_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=100))
         print(results['Bubble'])
-        results['Selection'].append(timeit.timeit('sorts.selection_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=1))
+        results['Selection'].append(timeit.timeit('sorts.selection_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=100))
         print(results['Selection'])
-        results['Merge'].append(timeit.timeit('sorts.merge_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=1))
+        results['Merge'].append(timeit.timeit('sorts.merge_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=100))
         print(results['Merge'])
-        results['Quick'].append(timeit.timeit('sorts.quick_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=1))
+        results['Quick'].append(timeit.timeit('sorts.quick_sort(table)', setup="import sorts; from __main__ import get_table_of_words; num = %i;table = get_table_of_words(num)" % (num_of_words,), number=100))
         print(results['Quick'])
         num_of_words += 1000
         print(num_of_words)
