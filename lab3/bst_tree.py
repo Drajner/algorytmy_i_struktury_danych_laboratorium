@@ -22,13 +22,16 @@ class BST:  # uses first number from numbers as root
 
     def delete_node(self, number):
         node_to_delete = self.search(number)
+        if self.root.left_child is None and self.root.right_child is None:
+            self.root = None
+            return
         root_changed = node_to_delete.delete()
         if root_changed:
             self.root = root_changed
 
-
-
     def __str__(self):
+        if self.root is None:
+            return ""
         return self.root.stringify()
 
 
@@ -72,6 +75,7 @@ class Node:
             i_predecessor = self.inorder_predecessor()
             self.value = i_predecessor.value
             i_predecessor.delete()
+            return i_predecessor
         elif self.right_child is None:
             if self.parent is not None:
                 if self.parent.left_child == self:
@@ -118,4 +122,5 @@ if __name__ == "__main__":
     numbers = [10, 2, 3]
     tree = BST(numbers)
     tree.delete_node(10)
+    tree.delete_node(3)
     print(tree)
