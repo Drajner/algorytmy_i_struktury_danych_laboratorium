@@ -13,7 +13,7 @@ class BST:  # uses first number from numbers as root
 
     def search(self, number):
         current_node = self.root
-        while current_node is not None or current_node.value != number:
+        while current_node is not None and current_node.value != number:
             if number >= current_node.value:
                 current_node = current_node.right_child
             else:
@@ -22,7 +22,11 @@ class BST:  # uses first number from numbers as root
 
     def delete_node(self, number):
         node_to_delete = self.search(number)
-        node_to_delete.delete()
+        root_changed = node_to_delete.delete()
+        if root_changed:
+            self.root = root_changed
+
+
 
     def __str__(self):
         return self.root.stringify()
@@ -58,12 +62,44 @@ class Node:
             return self.left_child
 
     def delete(self):
-        if self.parent.left_child.value == self.value:
-            self.parent.left_child = self.right_child
-            self.parent.add_child(self.left_child)
+        children = [self.left_child, self.right_child]
+        if children == [None, None]:
+            if self.parent.left_child == self:
+                self.parent.left_child = None
+            else:
+                self.parent.right_child = None
+        elif None not in children:
+            i_predecessor = self.inorder_predecessor()
+            self.value = i_predecessor.value
+            i_predecessor.delete()
+        elif self.right_child is None:
+            if self.parent is not None:
+                if self.parent.left_child == self:
+                    self.parent.left_child = self.left_child
+                    self.left_child.parent = self.parent
+                else:
+                    self.parent.right_child = self.left_child
+                    self.left_child.parent = self.parent
+            else:
+                self.left_child.parent = None
+                return self.left_child
         else:
-            self.parent.right_child = self.right_child
-            self.parent.add_child(self.left_child)
+            if self.parent is not None:
+                if self.parent.left_child == self:
+                    self.parent.left_child = self.right_child
+                    self.right_child.parent = self.parent
+                else:
+                    self.parent.right_child = self.right_child
+                    self.right_child.parent = self.parent
+            else:
+                self.right_child.parent = None
+                return self.right_child
+
+    def inorder_predecessor(self):
+        current_node = self.left_child
+        while current_node.right_child is not None:
+            current_node = current_node.right_child
+        return current_node
 
     def stringify(self, recurence_depth=0):
         returning_string = ""
@@ -78,6 +114,8 @@ class Node:
 
 
 if __name__ == "__main__":
-    numbers = [10, 5, 15, 3, 4, 17, 18, 18]
+    # numbers = [10, 5, 15, 3, 4, 17, 18, 18]
+    numbers = [10, 2, 3]
     tree = BST(numbers)
+    tree.delete_node(10)
     print(tree)

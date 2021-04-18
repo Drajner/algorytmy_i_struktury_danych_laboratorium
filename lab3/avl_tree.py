@@ -45,6 +45,15 @@ class AVL(BST):
         self.root.add_child(new_node)
         self.balance(new_node)
 
+    def delete_node(self, number):
+        node_to_delete = self.search(number)
+        node_to_balance = node_to_delete.parent
+        root_changed = node_to_delete.delete()
+        if root_changed:
+            self.root = root_changed
+        else:
+            self.balance(node_to_balance)
+
 
 class Node_AVL(Node):
     def __init__(self, value, left_node=None, right_node=None, parent=None, height=1):
@@ -100,7 +109,7 @@ class Node_AVL(Node):
 
 
 if __name__ == "__main__":
-    numbers = sample(range(0, 15000), 30)
-    numbers = [1,2,3,4,4]
+    numbers = sample(range(0, 15000), 100)
+    deleted_nums = sample(numbers, 90)
     tree = AVL(numbers)
     print(tree)
