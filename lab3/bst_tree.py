@@ -1,4 +1,4 @@
-
+from random import sample
 class BST:  # uses first number from numbers as root
     def __init__(self, numbers):
         self.root = Node(numbers[0])
@@ -27,7 +27,8 @@ class BST:  # uses first number from numbers as root
             return
         root_changed = node_to_delete.delete()
         if root_changed:
-            self.root = root_changed
+            if root_changed.parent is None:
+                self.root = root_changed
 
     def __str__(self):
         if self.root is None:
@@ -118,9 +119,12 @@ class Node:
 
 
 if __name__ == "__main__":
-    # numbers = [10, 5, 15, 3, 4, 17, 18, 18]
-    numbers = [10, 2, 3]
+    numbers = sample(range(0, 150), 50)
+    print(numbers)
+    deleted = sample(numbers, 50)
     tree = BST(numbers)
-    tree.delete_node(10)
-    tree.delete_node(3)
+    for num in deleted:
+        print(f"DELETED: {num}")
+        print(tree)
+        tree.delete_node(num)
     print(tree)
