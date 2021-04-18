@@ -24,14 +24,20 @@ class AVL(BST):
                 else:
                     current_node.right_child.rotate_right()
                     current_node.rotate_left()
+                node = current_node
             if balance == -2:
                 if current_node.left_child.value <= node.value:
                     current_node.left_child.rotate_left()
                     current_node.rotate_right()
                 else:
                     current_node.rotate_right()
+                node = current_node
             current_node = current_node.parent
         self.update_root()
+        if current_node == self.root:
+            return False
+        else:
+            return current_node
 
     def update_root(self):
         if self.root.parent is not None:
@@ -52,7 +58,9 @@ class AVL(BST):
         if root_changed:
             self.root = root_changed
         else:
-            self.balance(node_to_balance)
+            next_node = self.balance(node_to_balance)
+            while next_node:
+                next_node = self.balance(next_node).parent
 
 
 class Node_AVL(Node):
@@ -109,7 +117,15 @@ class Node_AVL(Node):
 
 
 if __name__ == "__main__":
-    numbers = sample(range(0, 15000), 100)
-    deleted_nums = sample(numbers, 90)
+    # numbers = sample(range(0, 15), 10)
+    # print(numbers)
+    # deleted = sample(numbers, 3)
+    # print(deleted)
+    numbers = [12, 1, 6, 14, 0, 11, 7, 10, 8, 4]
+    deleted = [4, 0, 6]
     tree = AVL(numbers)
+    # print(tree)
+    for num in deleted:
+        print(tree)
+        tree.delete_node(num)
     print(tree)
