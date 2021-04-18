@@ -19,13 +19,13 @@ class AVL(BST):
             current_node.height = 1 + max(heights)
             balance = heights[1] - heights[0]
             if balance == 2:
-                if current_node.right_child.value < node.value:
+                if current_node.right_child.value <= node.value:
                     current_node.rotate_left()
                 else:
                     current_node.right_child.rotate_right()
                     current_node.rotate_left()
             if balance == -2:
-                if current_node.left_child.value < node.value:
+                if current_node.left_child.value <= node.value:
                     current_node.left_child.rotate_left()
                     current_node.rotate_right()
                 else:
@@ -101,5 +101,6 @@ class Node_AVL(Node):
 
 if __name__ == "__main__":
     numbers = sample(range(0, 15000), 30)
+    numbers = [1,2,3,4,4]
     tree = AVL(numbers)
     print(tree)
