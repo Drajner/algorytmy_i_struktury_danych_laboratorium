@@ -43,6 +43,7 @@ class AVL(BST):
     def add_node(self, number):
         new_node = Node_AVL(number)
         self.root.add_child(new_node)
+        self.balance(new_node)
 
 
 class Node_AVL(Node):
