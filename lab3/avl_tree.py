@@ -5,16 +5,14 @@ from random import sample
 class AVL(BST):
     def __init__(self, numbers):
         self.root = Node_AVL(numbers[0])
-        for number in numbers:
-            if number == self.root.value:
-                continue
+        for number in numbers[1:]:
             new_node = Node_AVL(number)
-            self.root.add_child(new_node)
-            self.balance(new_node)
+            self.add_node(new_node)
 
     def balance(self, node):
         current_node = node
-        while current_node is not None:
+        node_balanced = False
+        while current_node is not None and not node_balanced:
             heights = current_node.get_child_heights()
             current_node.height = 1 + max(heights)
             balance = heights[1] - heights[0]
@@ -25,12 +23,14 @@ class AVL(BST):
                     current_node.right_child.rotate_right()
                     current_node.rotate_left()
                 node = current_node
+                node_balanced = True
             if balance == -2:
                 if current_node.left_child.value <= node.value:
                     current_node.left_child.rotate_left()
                     current_node.rotate_right()
                 else:
                     current_node.rotate_right()
+                node_balanced = True
                 node = current_node
             current_node = current_node.parent
         self.update_root()
@@ -42,13 +42,11 @@ class AVL(BST):
                 current_node = current_node.parent
             self.root = current_node
 
-    def add_node(self, number):
-        new_node = Node_AVL(number)
-        self.root.add_child(new_node)
+    def add_node(self, new_node):
+        super().add_node(new_node)
         self.balance(new_node)
 
     def delete_node(self, number):
-        print(f"\nDELETED: {number}\n")
         node_to_delete = self.search(number)
         if self.root.left_child is None and self.root.right_child is None:
             self.root = None
@@ -164,15 +162,14 @@ class Node_AVL(Node):
 
 
 if __name__ == "__main__":
-    numbers = sample(range(0, 150), 50)
-    print(numbers)
-    deleted = sample(numbers, 50)
-    print(deleted)
-    # numbers = [12, 1, 6, 14, 0, 11, 7, 10, 8, 4]
-    # deleted = [4, 0, 6, 12, 10, 11, 14, 8, 1,7]
+    # numbers = sample(range(0, 150), 50)
+    # print(numbers)
+    # deleted = sample(numbers, 50)
+    # print(deleted)
+    numbers = [12, 1, 6, 14, 0, 11, 7, 10, 8, 4, 4,4,4, 4]
+    deleted = [4, 0, 6, 12, 10, 11, 14, 8, 1, 7,4,4]
     tree = AVL(numbers)
-    # print(tree)
+    print(tree)
     for num in deleted:
-        print(tree)
         tree.delete_node(num)
     print(tree)
