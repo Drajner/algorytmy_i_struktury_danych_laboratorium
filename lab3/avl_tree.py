@@ -105,7 +105,7 @@ class Node_AVL(Node):
 
     def rotate_left(self):
         r_child = self.right_child
-        r_child.parent = self.parent
+        r_child.parent = self.parent  # here
         if self.parent is not None:
             if self.value < self.parent.value:
                 self.parent.left_child = r_child
