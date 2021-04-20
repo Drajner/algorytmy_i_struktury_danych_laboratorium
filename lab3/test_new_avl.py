@@ -136,8 +136,8 @@ def test_AVL_11():
     assert tree.root.left_child.left_child.left_child.right_child.value == 0.4
 
 
-def test_AVL_11():
-    tree = AVL_tree([3, 0.5, 1, 4, 0.4, 0.75, 5, 3, 3, 3, 6, 0.3, 0.25])
+def test_AVL_12():
+    tree = AVL_tree([3, 0.5, 1, 4, 0.4, 0.75, 5, 3, 3, 3, 6, 0.3, 0.25, 0.45])
     assert tree.root.value == 3
     assert tree.root.right_child.value == 4
     assert tree.root.right_child.left_child.value == 3
@@ -145,10 +145,71 @@ def test_AVL_11():
     assert tree.root.right_child.right_child.right_child.value == 6
     assert tree.root.right_child.right_child.left_child is None
     assert tree.root.left_child.value == 1
-    assert tree.root.left_child.left_child.value == 0.5
+    assert tree.root.left_child.left_child.value == 0.4
     assert tree.root.left_child.left_child.left_child.value == 0.3
-    assert tree.root.left_child.left_child.right_child.value == 0.75
+    assert tree.root.left_child.left_child.right_child.value == 0.5
+    assert tree.root.left_child.left_child.right_child.left_child.value == 0.45
+    assert tree.root.left_child.left_child.right_child.right_child.value == 0.75
+    assert tree.root.left_child.left_child.left_child.left_child.value == 0.25
     assert tree.root.left_child.right_child.value == 3
     assert tree.root.left_child.right_child.left_child.value == 3
+
+
+def test_AVL_deletion():
+    tree = AVL_tree([3, 0.5, 1, 4, 0.4, 0.75, 5, 3, 3, 3, 6, 0.3, 0.25, 0.45])
+    tree.delete(0.75)
+    assert tree.root.value == 3
+    assert tree.root.right_child.value == 4
+    assert tree.root.right_child.left_child.value == 3
+    assert tree.root.right_child.right_child.value == 5
+    assert tree.root.right_child.right_child.right_child.value == 6
+    assert tree.root.right_child.right_child.left_child is None
+    assert tree.root.left_child.value == 1
+    assert tree.root.left_child.left_child.value == 0.4
+    assert tree.root.left_child.left_child.left_child.value == 0.3
+    assert tree.root.left_child.left_child.right_child.value == 0.5
+    assert tree.root.left_child.left_child.right_child.left_child.value == 0.45
+    assert tree.root.left_child.left_child.right_child.right_child is None
     assert tree.root.left_child.left_child.left_child.left_child.value == 0.25
-    assert tree.root.left_child.left_child.left_child.right_child.value == 0.4
+    assert tree.root.left_child.right_child.value == 3
+    assert tree.root.left_child.right_child.left_child.value == 3
+
+
+def test_AVL_deletion_1():
+    tree = AVL_tree([3, 0.5, 1, 4, 0.4, 0.75, 5, 3, 3, 3, 6, 0.3, 0.25, 0.45])
+    tree.delete(0.75)
+    tree.delete(0.45)
+    assert tree.root.value == 3
+    assert tree.root.right_child.value == 4
+    assert tree.root.right_child.left_child.value == 3
+    assert tree.root.right_child.right_child.value == 5
+    assert tree.root.right_child.right_child.right_child.value == 6
+    assert tree.root.right_child.right_child.left_child is None
+    assert tree.root.left_child.value == 1
+    assert tree.root.left_child.left_child.value == 0.4
+    assert tree.root.left_child.left_child.left_child.value == 0.3
+    assert tree.root.left_child.left_child.right_child.value == 0.5
+    assert tree.root.left_child.left_child.right_child.left_child is None
+    assert tree.root.left_child.left_child.right_child.right_child is None
+    assert tree.root.left_child.left_child.left_child.left_child.value == 0.25
+    assert tree.root.left_child.right_child.value == 3
+    assert tree.root.left_child.right_child.left_child.value == 3
+
+
+def test_AVL_deletion_2():
+    tree = AVL_tree([3, 0.5, 1, 4, 0.4, 0.75, 5, 3, 3, 3, 6, 0.3, 0.25, 0.45])
+    tree.delete(0.75)
+    tree.delete(0.45)
+    tree.delete(0.5)
+    assert tree.root.value == 3
+    assert tree.root.right_child.value == 4
+    assert tree.root.right_child.left_child.value == 3
+    assert tree.root.right_child.right_child.value == 5
+    assert tree.root.right_child.right_child.right_child.value == 6
+    assert tree.root.right_child.right_child.left_child is None
+    assert tree.root.left_child.value == 1
+    assert tree.root.left_child.left_child.value == 0.3
+    assert tree.root.left_child.left_child.left_child.value == 0.25
+    assert tree.root.left_child.left_child.right_child.value == 0.4
+    assert tree.root.left_child.right_child.value == 3
+    assert tree.root.left_child.right_child.left_child.value == 3
