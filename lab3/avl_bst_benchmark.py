@@ -1,5 +1,3 @@
-from bst_tree import BST
-from avl_tree import AVL
 import sys
 import random
 import timeit
@@ -15,7 +13,7 @@ def random_list(number):
     return the_list
 
 
-def get_times():
+def get_times(test_number):
     results = {'bst_create': [], 'bst_search': [], 'bst_delete': [], 'avl_create': [], 'avl_search': [], 'avl_delete': []}
     the_list = random_list(10000)
     job_not_done = True
@@ -58,12 +56,12 @@ for value in the_list[0:reps]:
 for value in the_list[0:reps]:
     tree.delete_node(value)
 """
-        results['bst_create'].append(timeit.timeit("tree = BST(the_list[0:reps])", setup=setup_creation, number=1))
-        results['avl_create'].append(timeit.timeit("tree = AVL(the_list[0:reps])", setup=setup_creation, number=1))
-        results['bst_search'].append(timeit.timeit(execute_bst_search, setup=setup_bst, number=1))
-        results['avl_search'].append(timeit.timeit(execute_avl_search, setup=setup_avl, number=1))
-        results['bst_delete'].append(timeit.timeit(execute_bst_delete, setup=setup_bst, number=1))
-        results['avl_delete'].append(timeit.timeit(execute_avl_delete, setup=setup_avl, number=1))
+        results['bst_create'].append(timeit.timeit("tree = BST(the_list[0:reps])", setup=setup_creation, number=test_number))
+        results['avl_create'].append(timeit.timeit("tree = AVL(the_list[0:reps])", setup=setup_creation, number=test_number))
+        results['bst_search'].append(timeit.timeit(execute_bst_search, setup=setup_bst, number=test_number))
+        results['avl_search'].append(timeit.timeit(execute_avl_search, setup=setup_avl, number=test_number))
+        results['bst_delete'].append(sum(timeit.repeat(execute_bst_delete, setup=setup_bst, repeat=test_number, number=1)))
+        results['avl_delete'].append(sum(timeit.repeat(execute_avl_delete, setup=setup_avl, repeat=test_number, number=1)))
         if repetitions >= 10000:
             job_not_done = False
         repetitions += 1000
@@ -78,7 +76,8 @@ def plot_data(x_axis, y_axis, x_label="", y_label="", col="b-"):
 
 
 if __name__ == "__main__":
-    results = get_times()
+    test_number = 10
+    results = get_times(test_number)
     creation = ["bst_create", "avl_create"]
     searching = ["bst_search", "avl_search"]
     deletion = ["bst_delete", "avl_delete"]
@@ -93,6 +92,7 @@ if __name__ == "__main__":
             x_label = "Liczba elementów"
             y_label = "Czas [s]"
             plot_data(x_axis, y_axis, x_label, y_label, col)
+        pyplot.title(f"Liczba powtórzeń {test_number}")
         pyplot.legend(test_category)
         pyplot.savefig("lab3/" + test_category[0][-6:] + ".png")
         pyplot.clf()

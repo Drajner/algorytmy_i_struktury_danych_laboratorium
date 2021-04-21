@@ -85,6 +85,8 @@ class AVL():
         node.balance = r_height - l_height
 
     def delete_node(self, number, node="root"):
+        if self.root is None:
+            return
         if node == "root":
             node = self.root
         if self.root.left_child is None and self.root.right_child is None:
@@ -119,10 +121,8 @@ class AVL():
             if node.right_child.right_child is not None:
                 r_height = node.right_child.right_child.height
             if r_height >= l_height:
-                # print("RR")
                 node = self.rotate_left(node)
             else:
-                # print("RL")
                 node.right_child = self.rotate_right(node.right_child)
                 node = self.rotate_left(node)
         if node.balance < -1:
@@ -133,11 +133,9 @@ class AVL():
             if node.left_child.right_child is not None:
                 r_height = node.left_child.right_child.height
             if r_height >= l_height:
-                # print("LR")
                 node.left_child = self.rotate_left(node.left_child)
                 node = self.rotate_right(node)
             else:
-                # print("LL")
                 node = self.rotate_right(node)
         return node
 
@@ -161,12 +159,8 @@ class AVL():
         additional_string1 = '>'
         additional_string1 *= recurence_depth
         if node.right_child is not None:
-            
             returning_string = returning_string + self.stringify(node.right_child, recurence_depth+1)
         returning_string = returning_string + additional_string1 + str(node.value) + '\n'
         if node.left_child is not None:
             returning_string = returning_string + self.stringify(node.left_child, recurence_depth+1)
         return returning_string
-
-tree = AVL([9,6,4,1,2,8,7,3,5,11,12,19,15,13,16,17,18,14,10])
-print(tree)

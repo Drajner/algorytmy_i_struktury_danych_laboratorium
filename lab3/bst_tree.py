@@ -32,15 +32,13 @@ class BST:  # uses first number from numbers as root
         return current_node
 
     def delete_node(self, number):
+        if self.root is None:
+            return
         node_to_delete = self.search(number)
         if self.root.left_child is None and self.root.right_child is None:
             self.root = None
             return
-        try:
-            root_changed = node_to_delete.delete()
-        except Exception:
-            print(self)
-            print(f'DELETED: {number}\n')
+        root_changed = node_to_delete.delete()
         if root_changed:
             if root_changed.parent is None:
                 self.root = root_changed
