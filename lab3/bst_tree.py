@@ -1,4 +1,3 @@
-from random import sample
 class BST:  # uses first number from numbers as root
     def __init__(self, numbers):
         self.root = Node(numbers[0])
@@ -126,15 +125,3 @@ class Node:
         if self.left_child is not None:
             returning_string = returning_string + self.left_child.stringify(recurence_depth+1)
         return returning_string
-
-
-if __name__ == "__main__":
-    numbers = [4,5,6,4564,213,4,4,5123,4,3,2,131,4]
-    print(numbers)
-    deleted = [4,4,4,4]
-    tree = BST(numbers)
-    for num in deleted:
-        print(f"DELETED: {num}")
-        print(tree)
-        tree.delete_node(num)
-    print(tree)
