@@ -141,12 +141,8 @@ class AVL():
 
     def find_inorder_predecessor(self, node):
         current_node = node.left_child
-        i = 1
         while current_node.right_child is not None:
             current_node = current_node.right_child
-            i += 1
-            if i > 16:
-                print(i)
         return current_node
 
     def __str__(self):
