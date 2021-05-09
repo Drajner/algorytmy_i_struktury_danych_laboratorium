@@ -28,7 +28,6 @@ class Heap:
             self.values[parent_place] = new_value
             new_place = parent_place
             parent_place = (new_place + self.width - 2) // self.width
-        print(self.values)
 
 
     """def remove_top(self):
@@ -75,7 +74,6 @@ class Heap:
                 parent_place = max_child_place
                 self.values[parent_place] = temp
                 child_place = (parent_place * self.width)-(self.width - 2)
-                print(self.values)
             else:
                 not_end_of_procedure = False
 
@@ -98,7 +96,7 @@ class Heap:
 
 
 
-heap_ass = Heap([10, 9, 5, 1, 8, 7, 6, 4, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 4)
+heap_ass = Heap([10, 9, 5, 1, 8, 7, 6, 4, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 2)
 print(heap_ass.values)
 print("")
 print("")
