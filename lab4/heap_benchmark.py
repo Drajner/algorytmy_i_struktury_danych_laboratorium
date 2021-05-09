@@ -29,8 +29,6 @@ for number in range(0, i):
         results['2-Heap_delete'].append(timeit.timeit(deletion, setup=creation_setup + deletion_setup_2, number=test_number))
         results['3-Heap_delete'].append(timeit.timeit(deletion, setup=creation_setup + deletion_setup_3, number=test_number))
         results['4-Heap_delete'].append(timeit.timeit(deletion, setup=creation_setup + deletion_setup_4, number=test_number))
-        print(i)
-    print(results)
     return results
 
 def plot_data(x_axis, y_axis, x_label="", y_label="", col="b-"):
