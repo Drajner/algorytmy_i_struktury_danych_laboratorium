@@ -170,6 +170,27 @@ def test_KR_not_occurring():
     assert(res == [])
 
 
+def test_KR_1():
+    word = "Apple"
+    text = "ABpple Apple, App, BApple"
+    res = find_KR(word, text)
+    assert(res == [7, 20])
+
+
+def test_KR_2():
+    word = "AB"
+    text = "AAABAAABAAABBBABABABBBBB"
+    res = find_KR(word, text)
+    assert(res == [2, 6, 10, 14, 16, 18])
+
+
+def test_KR_3():
+    word = "AAA"
+    text = "AAAAAAA AAAAA AAAA AAA AA A"
+    res = find_KR(word, text)
+    assert(res == [0, 1, 2, 3, 4, 8, 9, 10, 14, 15, 19])
+
+
 def test_all():
     results = []
     alphabet = ["A", "B"]

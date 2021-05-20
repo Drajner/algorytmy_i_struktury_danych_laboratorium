@@ -1,3 +1,13 @@
+polish_chars = {"Ą": 256, "Ć": 257, "Ę": 258, "Ł": 259,
+                "Ń": 260, "Ó": 261, "Ś": 262, "Ź": 263,
+                "Ż": 264, "ą": 265, "ć": 266, "ę": 267,
+                "ł": 268, "ń": 269, "ó": 270, "ś": 271,
+                "ź": 272, "ż": 273
+                }
+prime = 113
+alphabet_size = 256 + 18
+
+
 def find_N(string, text):
     found_occurrences = []
     word_length = len(string)
@@ -49,23 +59,39 @@ def find_KMP(string, text):
     return found_occurrences
 
 
+def char_value(char):
+    if char in polish_chars:
+        return polish_chars[char]
+    return ord(char)
+
+
+def hash_KR(p_value, weight, n_c, p_c=None):
+    if p_c is None:
+        n_value = (alphabet_size*(p_value)+char_value(n_c)) % prime
+    else:
+        n_value = (alphabet_size*(p_value-char_value(p_c)*weight)+char_value(n_c)) % prime
+    return n_value
+
+
 def find_KR(string, text):
     found_occurrences = []
+    word_length = len(string)
+    first_window = text[:word_length]
+    char_weight = (alphabet_size**(word_length-1)) % prime
+    hash_cword = 0
+    hash_str = 0
+    if not string or not text:
+        return found_occurrences
+    for i, j in zip(string, first_window):
+        hash_cword = hash_KR(hash_cword, char_weight, i)
+        hash_str = hash_KR(hash_str, char_weight, j)
+    for i in range(0, len(text) - word_length + 1):
+        if hash_cword == hash_str:
+            for j in range(0, word_length):
+                if text[i+j] != string[j]:
+                    break
+                elif j == word_length - 1:
+                    found_occurrences.append(i)
+        if i != len(text) - word_length:
+            hash_cword = hash_KR(hash_cword, char_weight, text[i], text[i+word_length])
     return found_occurrences
-
-
-a = get_prefix_suffix_table("AAAA")
-
-b = get_prefix_suffix_table("ABCDE")
-
-c = get_prefix_suffix_table("AABAACAABAA")
-
-d = get_prefix_suffix_table("AAACAAAAAC")
-
-e = get_prefix_suffix_table("AAABAAA")
-
-print(a)
-print(b)
-print(c)
-print(d)
-print(e)
