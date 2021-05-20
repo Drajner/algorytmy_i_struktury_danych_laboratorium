@@ -107,6 +107,27 @@ def test_KMP_not_occurring():
     assert(res == [])
 
 
+def test_KMP_1():
+    word = "Apple"
+    text = "ABpple Apple, App, BApple"
+    res = find_KMP(word, text)
+    assert(res == [7, 20])
+
+
+def test_KMP_2():
+    word = "AB"
+    text = "AAABAAABAAABBBABABABBBBB"
+    res = find_N(word, text)
+    assert(res == [2, 6, 10, 14, 16, 18])
+
+
+def test_KMP_3():
+    word = "AAA"
+    text = "AAAAAAA AAAAA AAAA AAA AA A"
+    res = find_KMP(word, text)
+    assert(res == [0, 1, 2, 3, 4, 8, 9, 10, 14, 15, 19])
+
+
 def test_KR_empty_word():
     word = str()
     text = "apple"
@@ -152,8 +173,8 @@ def test_KR_not_occurring():
 def test_all():
     results = []
     alphabet = ["A", "B"]
-    for i in range(0, 20):
-        text = "".join(random.choice(alphabet) for i in range(0, 100))
+    for i in range(0, 200):
+        text = "".join(random.choice(alphabet) for i in range(0, 1000))
         word = "".join(random.choice(alphabet) for i in range(0, 3))
-        results.append(find_KMP(word, text) == find_KR(word, text) == find_N(word, text))
+        results.append(find_KMP(word, text) == find_N(word, text) == find_KR(word, text))
     assert(all(results))
