@@ -1,9 +1,9 @@
 {
     "python.testing.pytestArgs": [
-        "lab2"
+        "lab5"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.pytestEnabled": false,
-    "python.testing.promptToConfigure": false
+    "python.testing.pytestEnabled": true,
+    "python.analysis.extraPaths": ["./lab2", "./lab3", "./lab4", "./lab5"]
 }
