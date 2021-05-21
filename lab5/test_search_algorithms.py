@@ -160,7 +160,5 @@ def test_all():
         res2 = find_KR(word, text)
         res3 = find_KR(word, text)
         result = (res1 == res2 == res3)
-        if not result:
-            print("!")
         results.append(result)
     assert(all(results))
