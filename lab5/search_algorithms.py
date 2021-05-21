@@ -69,7 +69,10 @@ def hash_KR(p_value, weight, n_c, p_c=None):
     if p_c is None:
         n_value = (alphabet_size*(p_value)+char_value(n_c)) % prime
     else:
-        n_value = (alphabet_size*(p_value-char_value(p_c)*weight)+char_value(n_c)) % prime
+        a = alphabet_size*p_value % prime
+        b = (-alphabet_size*char_value(p_c)*weight) % prime
+        c = char_value(n_c) % prime
+        n_value = (a+b+c) % prime
     return n_value
 
 
@@ -77,14 +80,16 @@ def find_KR(string, text):
     found_occurrences = []
     word_length = len(string)
     first_window = text[:word_length]
-    char_weight = (alphabet_size**(word_length-1)) % prime
+    weight = 1
+    for i in range(0, word_length - 1):
+        weight = (alphabet_size*weight) % prime
     hash_cword = 0
     hash_str = 0
     if not string or not text:
         return found_occurrences
     for i, j in zip(string, first_window):
-        hash_cword = hash_KR(hash_cword, char_weight, i)
-        hash_str = hash_KR(hash_str, char_weight, j)
+        hash_cword = hash_KR(hash_cword, weight, j)
+        hash_str = hash_KR(hash_str, weight, i)
     for i in range(0, len(text) - word_length + 1):
         if hash_cword == hash_str:
             for j in range(0, word_length):
@@ -93,5 +98,5 @@ def find_KR(string, text):
                 elif j == word_length - 1:
                     found_occurrences.append(i)
         if i != len(text) - word_length:
-            hash_cword = hash_KR(hash_cword, char_weight, text[i], text[i+word_length])
+            hash_cword = hash_KR(hash_cword, weight, text[i+word_length], text[i])
     return found_occurrences
