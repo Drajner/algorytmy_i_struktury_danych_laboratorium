@@ -24,18 +24,17 @@ def get_prefix_suffix_table(word):
     word_length = len(word)
     ps_talbe = [0]*word_length
     i = 0
-    for j in range(1, word_length):
-        if word[i] == word[j]:
+    j = 1
+    while j < word_length:
+        if word[i] == word[j]: 
             ps_talbe[j] = i + 1
+            j += 1
             i += 1
-        else:
+        elif i != 0:
             i = ps_talbe[i-1]
-            if word[j] == word[i]:
-                ps_talbe[j] = i + 1
-                i += 1
-            else:
-                ps_talbe[j] = 0
-                i = 0
+        else:
+            ps_talbe[j] = 0
+            j += 1
     return ps_talbe
 
 
@@ -45,7 +44,9 @@ def find_KMP(string, text):
     word_length = len(string)
     i = 0
     j = 0
-    while j != word_length and i < len(text):
+    if not word_length:
+        return found_occurrences
+    while i < len(text):
         if text[i] == string[j]:
             i += 1
             j += 1
@@ -100,3 +101,10 @@ def find_KR(string, text):
         if i != len(text) - word_length:
             hash_cword = hash_KR(hash_cword, weight, text[i+word_length], text[i])
     return found_occurrences
+
+
+word = "ABABAA"
+text = "BABABAABABAA"
+
+a = find_KMP(word, text)
+print(a)

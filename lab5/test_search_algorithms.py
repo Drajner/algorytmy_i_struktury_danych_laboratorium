@@ -152,9 +152,15 @@ def test_KR_not_occurring():
 def test_all():
     results = []
     alphabet = ["Ą", "Ź"]
-    for i in range(0, 200):
+    for i in range(0, 2000):
         text = "".join(random.choice(alphabet) for i in range(0, 1000))
         word_length = random.choice(range(1, 11))
         word = "".join(random.choice(alphabet) for i in range(0, word_length))
-        results.append(find_KMP(word, text) == find_N(word, text) == find_KR(word, text))
+        res1 = find_KMP(word, text)
+        res2 = find_KR(word, text)
+        res3 = find_KR(word, text)
+        result = (res1 == res2 == res3)
+        if not result:
+            print("!")
+        results.append(result)
     assert(all(results))
