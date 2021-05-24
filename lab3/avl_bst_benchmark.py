@@ -35,6 +35,7 @@ the_list = {the_list}
 tree = BST(the_list)
 """
         setup_avl = f"""
+from bst_tree import BST
 from avl_tree import AVL
 from __main__ import random_list
 reps = {repetitions}
@@ -58,11 +59,11 @@ for value in the_list[0:reps]:
     tree.delete_node(value)
 """
         results['bst_create'].append(timeit.timeit("tree = BST(the_list[0:reps])", setup=setup_creation, number=1))
-        #results['avl_create'].append(timeit.timeit("tree = AVL(the_list[0:reps])", setup=setup_creation, number=1))
+        results['avl_create'].append(timeit.timeit("tree = AVL(the_list[0:reps])", setup=setup_creation, number=1))
         results['bst_search'].append(timeit.timeit(execute_bst_search, setup=setup_bst, number=1))
-        #results['avl_search'].append(timeit.timeit(execute_avl_search, setup=setup_avl, number=1))
+        results['avl_search'].append(timeit.timeit(execute_avl_search, setup=setup_avl, number=1))
         results['bst_delete'].append(timeit.timeit(execute_bst_delete, setup=setup_bst, number=1))
-        #results['avl_delete'].append(timeit.timeit(execute_avl_delete, setup=setup_avl, number=1))
+        results['avl_delete'].append(timeit.timeit(execute_avl_delete, setup=setup_avl, number=1))
         if repetitions >= 10000:
             job_not_done = False
         repetitions += 1000
