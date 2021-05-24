@@ -1,15 +1,26 @@
-from random import sample
 class BST:  # uses first number from numbers as root
     def __init__(self, numbers):
         self.root = Node(numbers[0])
-        for number in numbers:
-            if number == self.root.value:
-                continue
-            self.root.add_child(Node(number))
+        for number in numbers[1:]:
+            new_child = Node(number)
+            self.add_node(new_child)
 
-    def add_node(self, number):
-        new_node = Node(number)
-        self.root.add_child(new_node)
+    def add_node(self, new_child):
+        current_node = self.root
+        while not new_child.parent:
+            if new_child.value >= current_node.value:
+                if current_node.right_child is not None:
+                    current_node = current_node.right_child
+                else:
+                    current_node.right_child = new_child
+                    new_child.parent = current_node
+            elif new_child.value < current_node.value:
+                if current_node.left_child is not None:
+                    current_node = current_node.left_child
+                else:
+                    current_node.left_child = new_child
+                    new_child.parent = current_node
+        return new_child
 
     def search(self, number):
         current_node = self.root
@@ -21,6 +32,8 @@ class BST:  # uses first number from numbers as root
         return current_node
 
     def delete_node(self, number):
+        if self.root is None:
+            return
         node_to_delete = self.search(number)
         if self.root.left_child is None and self.root.right_child is None:
             self.root = None
@@ -44,18 +57,12 @@ class Node:
         self.parent = parent
 
     def add_child(self, new_child):
-        if new_child.value >= self.value:
-            if self.right_child is not None:
-                self.right_child.add_child(new_child)
-            else:
-                self.right_child = new_child
-                new_child.parent = self
-        elif new_child.value < self.value:
-            if self.left_child is not None:
-                self.left_child.add_child(new_child)
-            else:
-                self.left_child = new_child
-                new_child.parent = self
+        if new_child.value >= self.value and self.right_child is None:
+            self.right_child = new_child
+            new_child.parent = self
+        if new_child.value < self.value and self.right_child is None:
+            self.left_child = new_child
+            new_child.parent = self
 
     def search(self, number):
         if number == self.value:
@@ -116,15 +123,3 @@ class Node:
         if self.left_child is not None:
             returning_string = returning_string + self.left_child.stringify(recurence_depth+1)
         return returning_string
-
-
-if __name__ == "__main__":
-    numbers = sample(range(0, 150), 50)
-    print(numbers)
-    deleted = sample(numbers, 50)
-    tree = BST(numbers)
-    for num in deleted:
-        print(f"DELETED: {num}")
-        print(tree)
-        tree.delete_node(num)
-    print(tree)

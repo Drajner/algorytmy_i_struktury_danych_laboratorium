@@ -1,178 +1,162 @@
-from bst_tree import BST, Node
-from random import sample
-
-
-class AVL(BST):
-    def __init__(self, numbers):
-        self.root = Node_AVL(numbers[0])
-        for number in numbers:
-            if number == self.root.value:
-                continue
-            new_node = Node_AVL(number)
-            self.root.add_child(new_node)
-            self.balance(new_node)
-
-    def balance(self, node):
-        current_node = node
-        while current_node is not None:
-            heights = current_node.get_child_heights()
-            current_node.height = 1 + max(heights)
-            balance = heights[1] - heights[0]
-            if balance == 2:
-                if current_node.right_child.value <= node.value:
-                    current_node.rotate_left()
-                else:
-                    current_node.right_child.rotate_right()
-                    current_node.rotate_left()
-                node = current_node
-            if balance == -2:
-                if current_node.left_child.value <= node.value:
-                    current_node.left_child.rotate_left()
-                    current_node.rotate_right()
-                else:
-                    current_node.rotate_right()
-                node = current_node
-            current_node = current_node.parent
-        self.update_root()
-
-    def update_root(self):
-        if self.root.parent is not None:
-            current_node = self.root.parent
-            while current_node.parent is not None:
-                current_node = current_node.parent
-            self.root = current_node
-
-    def add_node(self, number):
-        new_node = Node_AVL(number)
-        self.root.add_child(new_node)
-        self.balance(new_node)
-
-    def delete_node(self, number):
-        print(f"\nDELETED: {number}\n")
-        node_to_delete = self.search(number)
-        if self.root.left_child is None and self.root.right_child is None:
-            self.root = None
-            return
-        if self.root.left_child is None or self.root.right_child is None:
-            if self.root == node_to_delete:
-                root_changed = node_to_delete.delete()
-                self.root = root_changed
-            else:
-                node_to_delete.delete()
-            return
-        node_to_balance = node_to_delete.delete_AVL()
-        current_node = node_to_balance
-        while current_node is not None:
-            heights = current_node.get_child_heights()
-            current_node.height = 1 + max(heights)
-            balance = heights[1] - heights[0]
-            if balance == 2:
-                try:
-                    l_child_height = current_node.right_child.left_child.height
-                except AttributeError:
-                    l_child_height = 0
-                try:
-                    r_child_height = current_node.right_child.right_child.height
-                except AttributeError:
-                    r_child_height = 0
-                if l_child_height <= r_child_height:
-                    current_node.rotate_left()
-                else:
-                    current_node.right_child.rotate_right()
-                    current_node.rotate_left()
-            if balance == -2:
-                try:
-                    l_child_height = current_node.left_child.left_child.height
-                except AttributeError:
-                    l_child_height = 0
-                try:
-                    r_child_height = current_node.left_child.right_child.height
-                except AttributeError:
-                    r_child_height = 0
-                if l_child_height <= r_child_height:
-                    current_node.left_child.rotate_left()
-                    current_node.rotate_right()
-                else:
-                    current_node.rotate_right()
-            current_node = current_node.parent
-        self.update_root()
-
-
-class Node_AVL(Node):
-    def __init__(self, value, left_node=None, right_node=None, parent=None, height=1):
-        super().__init__(value, left_node, right_node, parent)
+class Node_AVL():
+    def __init__(self, value, left_child=None, right_child=None, height=1, balance=0):
+        self.value = value
+        self.left_child = left_child
+        self.right_child = right_child
         self.height = height
+        self.balance = balance
 
-    def rotate_left(self):
-        r_child = self.right_child
-        r_child.parent = self.parent  # here
-        if self.parent is not None:
-            if self.value < self.parent.value:
-                self.parent.left_child = r_child
+
+class AVL():
+    def __init__(self, numbers=None):
+        if numbers is None:
+            self.root = None
+        else:
+            self.root = Node_AVL(numbers[0])
+        try:
+            for num in numbers[1:]:
+                self.add_node(self.root, num)
+        except Exception:
+            pass
+
+    def add_node(self, current_node, number):
+        if current_node is None:
+            return Node_AVL(number)
+        if number >= current_node.value:
+            current_node.right_child = self.add_node(current_node.right_child, number)
+        else:
+            current_node.left_child = self.add_node(current_node.left_child, number)
+        self.update_node_height_balance(current_node)
+        if current_node.balance > 1:
+            if current_node.right_child.value <= number:
+                current_node = self.rotate_left(current_node)
             else:
-                self.parent.right_child = r_child
-        self.right_child = r_child.left_child
-        if self.right_child is not None:
-            self.right_child.parent = self
-        self.parent = r_child
-        r_child.left_child = self
-        r_heights = r_child.get_child_heights()
-        r_child.height = 1 + max(r_heights)
-        heights = self.get_child_heights()
-        self.height = 1 + max(heights)
-
-    def rotate_right(self):
-        l_child = self.left_child
-        l_child.parent = self.parent
-        if self.parent is not None:
-            if self.value < self.parent.value:
-                self.parent.left_child = l_child
+                current_node.right_child = self.rotate_right(current_node.right_child)
+                current_node = self.rotate_left(current_node)
+        if current_node.balance < -1:
+            if current_node.left_child.value <= number:
+                current_node.left_child = self.rotate_left(current_node.left_child)
+                current_node = self.rotate_right(current_node)
             else:
-                self.parent.right_child = l_child
-        self.left_child = l_child.right_child
-        if self.left_child is not None:
-            self.left_child.parent = self
-        l_child.right_child = self
-        self.parent = l_child
-        l_heights = l_child.get_child_heights()
-        l_child.height = 1 + max(l_heights)
-        heights = self.get_child_heights()
-        self.height = 1 + max(heights)
+                current_node = self.rotate_right(current_node)
+        return current_node
 
-    def get_child_heights(self):
-        l_child = self.left_child
-        r_child = self.right_child
-        heights = []
-        for child in [l_child, r_child]:
-            if child is None:
-                heights.append(0)
+    def search(self, number):
+        current_node = self.root
+        i = 1
+        while current_node is not None and current_node.value != number:
+            i += 1
+            if number >= current_node.value:
+                current_node = current_node.right_child
             else:
-                heights.append(child.height)
-        return heights
+                current_node = current_node.left_child
+        return current_node, i
 
-    def delete_AVL(self):
-        i_pred = super().delete()
-        if i_pred is not None:
-            return i_pred.parent
-        if self.right_child and self.left_child:
-            return self
-        if self.left_child:
-            return self.left_child
-        if self.right_child:
-            return self.right_child
-        return self.parent
+    def rotate_right(self, node):
+        temp = node.left_child.right_child
+        switched_node = node.left_child
+        node.left_child.right_child = node
+        node.left_child = temp
+        self.update_node_height_balance(node)
+        self.update_node_height_balance(switched_node)
+        if node == self.root:
+            self.root = switched_node
+        return switched_node
 
+    def rotate_left(self, node):
+        temp = node.right_child.left_child
+        switched_node = node.right_child
+        node.right_child.left_child = node
+        node.right_child = temp
+        self.update_node_height_balance(node)
+        self.update_node_height_balance(switched_node)
+        if node == self.root:
+            self.root = switched_node
+        return switched_node
 
-if __name__ == "__main__":
-    numbers = sample(range(0, 150), 50)
-    print(numbers)
-    deleted = sample(numbers, 50)
-    print(deleted)
-    # numbers = [12, 1, 6, 14, 0, 11, 7, 10, 8, 4]
-    # deleted = [4, 0, 6, 12, 10, 11, 14, 8, 1,7]
-    tree = AVL(numbers)
-    # print(tree)
-    for num in deleted:
-        print(tree)
-        tree.delete_node(num)
-    print(tree)
+    def update_node_height_balance(self, node):
+        l_height = 0
+        r_height = 0
+        if node.left_child is not None:
+            l_height = node.left_child.height
+        if node.right_child is not None:
+            r_height = node.right_child.height
+        node.height = 1 + max(r_height, l_height)
+        node.balance = r_height - l_height
+
+    def delete_node(self, number, node="root"):
+        if self.root is None:
+            return
+        if node == "root":
+            node = self.root
+        if self.root.left_child is None and self.root.right_child is None:
+            if self.root.value == number:
+                self.root = None
+        if node is None:
+            return node
+        if number > node.value:
+            node.right_child = self.delete_node(number, node.right_child)
+        elif number < node.value:
+            node.left_child = self.delete_node(number, node.left_child)
+        else:
+            children = [node.left_child, node.right_child]
+            if children == [None, None]:
+                node = None
+            elif None not in children:
+                i_predecessor = self.find_inorder_predecessor(node)
+                node.value = i_predecessor.value
+                node.left_child = self.delete_node(node.value, node.left_child)
+            elif children[0] is None:
+                node = node.right_child
+            elif children[1] is None:
+                node = node.left_child
+        if node is None:
+            return node
+        self.update_node_height_balance(node)
+        if node.balance > 1:
+            l_height = 0
+            r_height = 0
+            if node.right_child.left_child is not None:
+                l_height = node.right_child.left_child.height
+            if node.right_child.right_child is not None:
+                r_height = node.right_child.right_child.height
+            if r_height >= l_height:
+                node = self.rotate_left(node)
+            else:
+                node.right_child = self.rotate_right(node.right_child)
+                node = self.rotate_left(node)
+        if node.balance < -1:
+            l_height = 0
+            r_height = 0
+            if node.left_child.left_child is not None:
+                l_height = node.left_child.left_child.height
+            if node.left_child.right_child is not None:
+                r_height = node.left_child.right_child.height
+            if r_height >= l_height:
+                node.left_child = self.rotate_left(node.left_child)
+                node = self.rotate_right(node)
+            else:
+                node = self.rotate_right(node)
+        return node
+
+    def find_inorder_predecessor(self, node):
+        current_node = node.left_child
+        while current_node.right_child is not None:
+            current_node = current_node.right_child
+        return current_node
+
+    def __str__(self):
+        if self.root is None:
+            return ""
+        return self.stringify(self.root)
+
+    def stringify(self, node, recurence_depth=0):
+        returning_string = ""
+        additional_string1 = '>'
+        additional_string1 *= recurence_depth
+        if node.right_child is not None:
+            returning_string = returning_string + self.stringify(node.right_child, recurence_depth+1)
+        returning_string = returning_string + additional_string1 + str(node.value) + '\n'
+        if node.left_child is not None:
+            returning_string = returning_string + self.stringify(node.left_child, recurence_depth+1)
+        return returning_string
