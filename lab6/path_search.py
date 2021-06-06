@@ -1,4 +1,34 @@
+import argparse
+import os
+
 four_directions = {(0,1), (0,-1), (1,0), (-1,0)}
+
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+
+def get_file_name():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('name', help="name of the file with graph", type=str)
+    args = parser.parse_args()
+    return(args.name)
+
+
+def get_graph(file_name):
+    folder_name = os.path.dirname(os.path.abspath(__file__))
+    file_name_relative = os.path.join(folder_name, file_name)
+    graph = []
+    graph_line = []
+    with open(file_name_relative, 'r') as file:
+        contents = file.readlines()
+        for line in contents:
+            graph_line = []
+            for character in line:
+                if character in numbers:
+                    graph_line.append(int(character))
+            graph.append(graph_line)
+    return graph
+
+
 class Vertex_Queue():
     def __init__(self, list=None):
         self.list = []
@@ -16,7 +46,7 @@ class Vertex_Queue():
 
     def pop(self):
         return self.list.pop(0)
-    
+ 
     def empty(self):
         return not self.list
 
@@ -49,6 +79,7 @@ def find_start_and_end(array):
                 points.append((x_c, y_c))
     return points
 
+
 def create_graph(array):
     graph = []
     for row in array:
@@ -65,8 +96,7 @@ def create_graph(array):
                     continue
                 vertex.addNeighbour(graph[y_t][x_t])
     return graph
-                
-    
+
 
 def shortest_path_d(graph, start, end):
     x_s, y_s = start
@@ -82,7 +112,7 @@ def shortest_path_d(graph, start, end):
         path.add(current_vertex)
         current_vertex = current_vertex.previous_vertex
     return path
-    
+
 
 def determine_cost(current_vertex, queue, end_vertex, visited=None):
     if visited is None:
@@ -124,10 +154,22 @@ def find_path_in_array(array):
     g_path = visualized_path(array, graph, path)
     return g_path
 
+
+def show_path(the_path):
+    border = ''
+    for row in the_path:
+        border += '---'
+    print(border)
+    for row in the_path:
+        line = ''
+        for point in row:
+            line += ' ' + str(point) + ' '
+        print(line)
+    print(border)
+
+
 if __name__ == "__main__":
-    # array = [[0,2,1],
-    #          [2,2,1],
-    #          [2,1,0]]
+    """
     array = [[1,1,1,1,2,2],
              [1,0,4,1,2,2],
              [9,4,2,1,1,1],
@@ -135,5 +177,11 @@ if __name__ == "__main__":
              [9,9,0,4,1,1],
              [9,9,1,1,1,1]]
     path = find_path_in_array(array)
+    show_path(path)
+    show_path(array)
     for row in path:
         print(row)
+    """
+    show_path(get_graph(get_file_name()))
+    path = find_path_in_array(get_graph(get_file_name()))
+    show_path(path)
