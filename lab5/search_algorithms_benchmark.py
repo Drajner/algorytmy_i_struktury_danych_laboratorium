@@ -63,6 +63,11 @@ string = {string}
         results['naive_algorithm'].append(timeit.timeit("find_N(string, text)", setup=find_N_setup, number=test_number))
         results['KMP_algorithm'].append(timeit.timeit("find_KMP(string, text)", setup=find_KMP_setup, number=test_number))
         results['KR_algorithm'].append(timeit.timeit("find_KR(string, text)", setup=find_KR_setup, number=test_number))
+        print("text")
+        print(text[:1000])
+        print("string")
+        print(string[:1000])
+        print(find_N(string, text))
     return results
 
 
